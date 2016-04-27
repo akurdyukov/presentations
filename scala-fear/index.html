@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Scala: страх и ненависть в энтерпрайзе</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="shower/themes/ribbon/styles/screen-16x10.css">
+	<link rel="stylesheet" href="highlight/styles/default.css">
+</head>
+<body class="shower list">
+	<header class="caption">
+		<h1>Scala: страх и ненависть в энтерпрайзе</h1>
+		<p>Алик Курдюков для Moscow Scala Meetup</p>
+	</header>
+	<section class="slide" id="cover">
+		<h2>Scala: страх и ненависть в энтерпрайзе</h2>
+		<p>Алик Курдюков для Moscow Scala Meetup</p>
+		<img src="pictures/cover.jpg" alt="" class="cover">
+		<!--
+			To apply styles to the certain slides
+			set slide ID to get needed elements
+			-->
+		<style>
+			#cover h2 {
+				margin:30px 0 0;
+				color:#F00;
+				font-size:70px;
+				text-shadow:
+					0 0 5px #0F0,
+					0 0 15px #99FF42,
+					0 0 30px #99FF42;
+			}
+			#cover p {
+				margin:10px 0 0;
+				color:#FFF;
+				font-style:italic;
+				font-size:20px;
+			}
+			#cover p a {
+				color:#FFF;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>Обо мне</h2>
+		<ol>
+			<li>В IT с 1997 года</li>
+			<li>Примерно 15 лет управляю разработкой</li>
+			<li>Имею большой практический опыт с Java, C#, Python</li>
+			<li>Почти все проекты "долгоиграющие" (самый старый - 18 лет)</li>
+			<li>Конечно, я люблю технологические "игрушки"</li>
+		</ol>
+	</section>
+	<section class="slide">
+		<h2>Что нужно энтерпрайзу?</h2>
+		<ul>
+			<li>Стабильность (платформы)</li>
+			<li>Поддержка (платформы)</li>
+			<li>Масштабируемость (людей)</li>
+		</ul>
+	</section>
+	<section class="slide">
+		<h2>Стабильность платформы</h2>
+		<ol>
+			<li>Бинарная совместимость ломается каждую версию. Это все чтобы вы быстро развивались!</li>
+			<li>По исходникам, формально, есть. Но есть масса проектов, который до сих пор 2.10. Например, Spark.</li>
+		</ol>
+	</section>
+	<section class="slide">
+		<h2>Поддержка</h2>
+		<ol>
+			<li>Typesafe -> Lightbend (WTF?)</li>
+			<li>ScalaCenter</li>
+		</ol>
+	</section>
+	<section class="slide">
+		<h2>Масштабируемость</h2>
+		<p>Где взять людей и как потом поддерживать проект?</p>
+		<table>
+		<tr>
+			<th scope="col">Язык</th>
+			<th>Резюме</th>
+			<th>Вакансий</th>
+			<th>Средний доход</th>
+		</tr>
+		<tr>
+			<th scope="row">Scala</th>
+			<td>337</td>
+			<td>102</td>
+			<td>150 k&#8381;</td>
+		</tr>
+		<tr>
+			<th scope="row">Java</th>
+			<td>9072</td>
+			<td>1277</td>
+			<td>115 k&#8381;</td>
+		</tr>
+		<tr>
+			<th scope="row">Clojure</th>
+			<td>49</td>
+			<td>7</td>
+			<td>120 k&#8381;</td>
+		</tr>
+		<tr>
+			<th scope="row">Kotlin</th>
+			<td>12</td>
+			<td>10</td>
+			<td>150 k&#8381;</td>
+		</tr>
+		</table>
+	</section>
+	<section class="slide">
+		<h2>Сами научим?</h2>
+	</section>
+	<section class="slide">
+		<h2>Как правильно?</h2>
+		<pre>
+			<code>list1.contains(1)</code>
+			<code>list1 contains 1</code>
+			<code>list1 contains(1)</code>
+		</pre>
+		<pre>
+			<code>val list1: List[Integer] = List(1, 2, 3)</code>
+			<code>val list1 = List(1, 2, 3)</code>
+			<code>val list1 = List.apply(1, 2, 3)</code>
+		</pre>
+	</section>
+	<section class="slide" id="ugly-code1">
+		<h2>Исходники? Не надо туда смотреть.</h2>
+		<pre>
+			<code class="scala">
+override def ++[B >: A, That](that: GenTraversableOnce[B])
+	(implicit bf: CanBuildFrom[List[A], B, That]): That = 
+	if (bf eq List.ReusableCBF) (this ::: that.seq.toList).asInstanceOf[That]
+    else super.++(that)
+			</code>
+		</pre>
+		<p>"Что это за <span class="strike">нах</span> <span class="strike">brainfuck</span> scalaz тут написан?"</p>
+		<p class="note">Привет, Александреску!</p>
+		<style>
+			#ugly-code1 .scala {
+				font-size: 16px;
+			}
+			#ugly-code1 .strike {
+				text-decoration: line-through;
+			}
+		</style>
+	</section>
+	<section class="slide">
+		<h2>Все любят стандатные способы</h2>
+		<ol>
+			<li><code class="scala">scala> List(1, 2, 3).toSet()</code></li>
+			<li class="next">res0: Boolean = false</li>
+			<li class="next">WAT???</li>
+			<li class="next">А может <code>scala> List(1, 2, 3).toSet</code></li>
+			<li class="next"><code>res1: s.c.immutable.Set[Int] = Set(1, 2, 3)</code></li>
+		</ol>
+	</section>
+	<section class="slide">
+		<h2>Ваши паттерны устарели</h2>
+		<p>Зато cake pattern</p>
+		<p>А еще <code>implicit</code></p>
+	</section>
+	<section class="slide">
+		<h2>Вам никто не поможет</h2>
+		<p>JetBrains, ну как так?!</p>
+		<p>Только Eclipse, только хардкор</p>
+	</section>
+	<section class="slide">
+		<h2>Краткость во всей красе</h2>
+		<ol>
+			<li>А можно опечатки не будут приводить с трудноуловимым ошибкам?</li>
+			<li>Где тут граница между "еще кратко" и "уже заклинание"?</li>
+			<li>В чем-таки реальное преимущество?</li>
+		</ol>
+	</section>
+	<section class="slide">
+		<h2>Сами научим: итоги</h2>
+		<p>Только если действительно надо.</p>
+		<p>Не будет работать без "поджигателя".</p>
+		<p>Он должен быть дисциплинирован и сразу определить "как у нас не принято".</p>
+		<p>Пологая кривая обучения языку вместо пологой кривой изучения домена.</p>
+	</section>
+	<section class="slide" id="see-more">
+		<h2 class="shout shrink">
+			Let the holywar begin!
+		</h2>
+		<style>
+			#see-more h2 {
+				font-size:100px
+				}
+			#see-more img {
+				width:0.72em;
+				height:0.72em;
+				}
+		</style>
+	</section>
+	<div class="progress"></div>
+	<script src="shower/shower.min.js"></script>
+	<script src="highlight/highlight.pack.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
